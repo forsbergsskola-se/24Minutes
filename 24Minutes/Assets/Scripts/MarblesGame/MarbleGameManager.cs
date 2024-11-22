@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class MarbleGameManager : MonoBehaviour
 {
@@ -18,7 +20,9 @@ public class MarbleGameManager : MonoBehaviour
 
     public bool isPlayerTurn = true;
     public bool isGameOver = false;
-
+    public int rounds = 7;
+    public TextMeshProUGUI roundsText;
+    
     private Vector3 playerShootDirection;
     private float playerShootForce;
     private bool isPlayerShooting = false;
@@ -29,7 +33,16 @@ public class MarbleGameManager : MonoBehaviour
 
     void Start()
     {
+        UpdateRoundsText();
         InitializeMarbles();
+    }
+    
+    public void UpdateRoundsText()
+    {
+        if (roundsText != null)
+        {
+            roundsText.text = rounds.ToString(); // Convierte el número a texto y lo muestra
+        }
     }
 
     void InitializeMarbles()
@@ -102,8 +115,7 @@ public class MarbleGameManager : MonoBehaviour
         playerShootDirection = new Vector3(swipeVector.x, 0, swipeVector.y).normalized;
         isPlayerShooting = true;
 
-        yield return new WaitForSeconds(1.5f);
-        CheckMarbleColors();
+        yield return new WaitForSeconds(2.0f);
 
         if (!isGameOver)
         {
@@ -114,7 +126,7 @@ public class MarbleGameManager : MonoBehaviour
 
     IEnumerator AITurn()
     {
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(2.0f);
 
         GameObject target = GetBestTarget();
         if (target != null)
@@ -124,12 +136,17 @@ public class MarbleGameManager : MonoBehaviour
             isAIShooting = true;
         }
 
-        yield return new WaitForSeconds(1.0f);
-        CheckMarbleColors();
+        yield return new WaitForSeconds(2.0f);
 
-        if (!isGameOver)
+        if (rounds >1)
         {
+            rounds--;
+            UpdateRoundsText();
             isPlayerTurn = true;
+        }
+        else
+        {
+            CheckMarbleColors();
         }
     }
 
@@ -194,13 +211,15 @@ public class MarbleGameManager : MonoBehaviour
             else if (marbleColor == azul) blueCount++;
         }
 
-        if (redCount == neutralMarbles.Count)
+        if (redCount > blueCount)
         {
+            rounds--;
             EndGame(true);
             youwin.SetActive(true);
         }
-        else if (blueCount == neutralMarbles.Count)
+        else if (blueCount >= redCount)
         {
+            rounds--;
             EndGame(false);
             youlose.SetActive(true);
         }

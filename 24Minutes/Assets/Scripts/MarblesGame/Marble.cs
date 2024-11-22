@@ -82,6 +82,29 @@ public class MarbleBehavior : MonoBehaviour
             }
         }
     }
+    
+    private void OnCollisionStay(Collision collision)
+    {
+        Renderer thisRenderer = GetComponent<Renderer>();
+        Renderer otherRenderer = collision.collider.GetComponent<Renderer>();
+
+        if (thisRenderer == null || otherRenderer == null) return;
+
+        if (gameManager.isPlayerTurn)
+        {
+            if (otherRenderer.material.color == rojo && gameObject.CompareTag("NeutralMarble"))
+            {
+                thisRenderer.material.color = rojo;
+            }
+        }
+        else
+        {
+            if (otherRenderer.material.color == azul && gameObject.CompareTag("NeutralMarble"))
+            {
+                thisRenderer.material.color = azul;
+            }
+        }
+    }
 }
 
 
