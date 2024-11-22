@@ -102,7 +102,7 @@ public class MarbleGameManager : MonoBehaviour
         playerShootDirection = new Vector3(swipeVector.x, 0, swipeVector.y).normalized;
         isPlayerShooting = true;
 
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(1.5f);
         CheckMarbleColors();
 
         if (!isGameOver)
