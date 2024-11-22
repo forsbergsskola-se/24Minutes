@@ -177,7 +177,7 @@ public class MarbleGameManager : MonoBehaviour
         }
     }
 
-    GameObject GetBestTarget()
+    /*GameObject GetBestTarget()
     {
         float closestDistance = Mathf.Infinity;
         GameObject bestTarget = null;
@@ -197,7 +197,70 @@ public class MarbleGameManager : MonoBehaviour
         }
 
         return bestTarget;
+    }*/
+    
+    GameObject GetBestTarget()
+    {
+        GameObject bestTarget = null;
+        int maxGroupSize = 0;
+
+        foreach (var neutralMarble in neutralMarbles)
+        {
+            if (!neutralMarble.CompareTag("NeutralMarble")) continue;
+
+            // Evalúa si esta canica puede ser parte de un grupo
+            var marbleColor = neutralMarble.GetComponent<Renderer>().material.color;
+            if (marbleColor != gris && marbleColor != rojo) continue;
+
+            // Encuentra el grupo al que pertenece esta canica
+            List<GameObject> group = FindMarbleGroup(neutralMarble);
+
+            // Actualiza el mejor grupo si es más grande
+            if (group.Count > maxGroupSize)
+            {
+                maxGroupSize = group.Count;
+                bestTarget = neutralMarble;
+            }
+        }
+
+        return bestTarget;
     }
+
+    List<GameObject> FindMarbleGroup(GameObject startMarble)
+    {
+        List<GameObject> group = new List<GameObject>();
+        Queue<GameObject> queue = new Queue<GameObject>();
+        HashSet<GameObject> visited = new HashSet<GameObject>();
+
+        queue.Enqueue(startMarble);
+        visited.Add(startMarble);
+
+        while (queue.Count > 0)
+        {
+            GameObject current = queue.Dequeue();
+            group.Add(current);
+
+            foreach (var otherMarble in neutralMarbles)
+            {
+                if (visited.Contains(otherMarble)) continue;
+
+                // Asegúrate de que solo se consideren canicas válidas
+                var otherColor = otherMarble.GetComponent<Renderer>().material.color;
+                if (otherColor != gris && otherColor != rojo) continue;
+
+                // Verifica si está cerca para formar un grupo
+                float distance = Vector3.Distance(current.transform.position, otherMarble.transform.position);
+                if (distance <= 5.0f) // Ajusta este valor para definir "proximidad"
+                {
+                    queue.Enqueue(otherMarble);
+                    visited.Add(otherMarble);
+                }
+            }
+        }
+
+        return group;
+    }
+
 
     void CheckMarbleColors()
     {
