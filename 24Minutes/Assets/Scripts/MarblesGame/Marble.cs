@@ -6,7 +6,7 @@ public class MarbleBehavior : MonoBehaviour
     public Color azul = Color.blue;
     public Color rojo = Color.red;
 
-    public MarbleGameManager gameManager; // Referencia al GameManager
+    public MarbleGameManager gameManager; // Referencia al ConversationGameManager
     public GameObject ground; // Objeto Ground para definir el área válida
 
     private Collider groundCollider;
@@ -20,7 +20,7 @@ public class MarbleBehavior : MonoBehaviour
 
         if (ground == null)
         {
-            ground = gameManager.ground; // Usamos la referencia del GameManager
+            ground = gameManager.ground; // Usamos la referencia del ConversationGameManager
         }
 
         if (ground != null)

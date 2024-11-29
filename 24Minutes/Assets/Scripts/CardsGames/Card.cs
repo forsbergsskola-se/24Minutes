@@ -3,36 +3,33 @@ using UnityEngine.UI;
 
 public class Card : MonoBehaviour
 {
-    public Image cardBack, cardFront;
-    private CardData cardData;
-    private System.Action<Card> onClickCallback;
-    public bool IsRevealed { get; private set; }
+    public Image cardImage;
+    public Sprite cardBack; 
+    public Sprite cardFront; 
 
-    public CardData CardData => cardData;
-
-    public void Setup(CardData data, System.Action<Card> callback)
+    public CardData data; 
+    public bool isRevealed = false;
+    
+    public void SetupCard(CardData cardData, Sprite frontImage)
     {
-        cardData = data;
-        onClickCallback = callback;
-        cardFront.sprite = cardData.GetSprite();
-        IsRevealed = false;
-        UpdateView();
+        data = cardData;
+        cardFront = frontImage;
+        cardImage.sprite = cardBack;
     }
 
-    public void Reveal()
+    public void RevealCard()
     {
-        IsRevealed = true;
-        UpdateView();
+        if (isRevealed) return;
+
+        isRevealed = true;
+        cardImage.sprite = cardFront;
+        
+        CardGameManager.Instance.OnCardClicked(this);
     }
 
-    void UpdateView()
+    public void HideCard()
     {
-        cardBack.gameObject.SetActive(!IsRevealed);
-        cardFront.gameObject.SetActive(IsRevealed);
-    }
-
-    void OnMouseDown()
-    {
-        if (!IsRevealed) onClickCallback?.Invoke(this);
+        isRevealed = false;
+        cardImage.sprite = cardBack;
     }
 }

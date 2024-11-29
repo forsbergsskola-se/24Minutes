@@ -33,7 +33,7 @@ class StoryBlock
     }
 }
 
-public class GameManager : MonoBehaviour
+public class ConversationGameManager : MonoBehaviour
 {
     public TextMeshProUGUI conversation;
     public Button option1;
