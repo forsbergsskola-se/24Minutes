@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Random = UnityEngine.Random;
@@ -20,6 +21,8 @@ public class CardGameManager : MonoBehaviour
     public TextMeshProUGUI playerRoundScoreText;
     public TextMeshProUGUI iaRoundScoreText;
     public TextMeshProUGUI turnIndicatorText;
+    public TextMeshProUGUI roundCounterText;
+    public TextMeshProUGUI endGameMessageText;
     public Button retireButton;
 
     private List<Card> cardsInGame = new List<Card>();
@@ -28,8 +31,10 @@ public class CardGameManager : MonoBehaviour
     private int playerRoundScore = 0;
     private int iaRoundScore = 0;
     private HashSet<CardType> trapsRevealed = new HashSet<CardType>();
+    private int roundCounter = 1; // Contador de rondas
+    private bool isGameOver = false;
 
-    private bool isPlayerTurn = true;
+    public bool isPlayerTurn = true;
     private bool isPlayerOut = false;
     private bool isIaOut = false;
 
@@ -41,31 +46,54 @@ public class CardGameManager : MonoBehaviour
     private void Start()
     {
         InitializeGame();
-        retireButton.onClick.AddListener(OnPlayerRetire); // Vincula el botón de retirarse
     }
 
     private void InitializeGame()
     {
-        // Crear y distribuir las cartas
+        Debug.Log("Initializing game...");
+
+        trapsRevealed.Clear();
+        isPlayerOut = false;
+        isIaOut = false;
+        isPlayerTurn = true;
+        playerRoundScore = 0;
+        iaRoundScore = 0;
+        
+        cardsInGame.Clear();
+
+        foreach (Transform child in cardContainer)
+        {
+            Destroy(child.gameObject);
+        }
+
         List<CardData> cardDataList = GenerateCardData();
         foreach (CardData data in cardDataList)
         {
             GameObject newCard = Instantiate(cardPrefab, cardContainer);
             Card card = newCard.GetComponent<Card>();
+            if (card == null)
+            {
+                Debug.LogError("Card component not found on prefab!");
+                continue;
+            }
+
             Sprite frontImage = cardFrontImages[(int)data.type];
             card.SetupCard(data, frontImage);
-            
-            // Asignar la función al botón
+
             Button cardButton = newCard.GetComponent<Button>();
             if (cardButton != null)
             {
                 cardButton.onClick.AddListener(() => OnCardClicked(card));
             }
-            
+            else
+            {
+                Debug.LogError("Button component missing on card prefab!");
+            }
+
             cardsInGame.Add(card);
         }
 
-        //ShuffleCards();
+        retireButton.onClick.AddListener(OnPlayerRetire);
         UpdateUI();
     }
 
@@ -73,29 +101,25 @@ public class CardGameManager : MonoBehaviour
     {
         List<CardData> cardDataList = new List<CardData>();
 
-        // Añadir cartas de trampa
         for (int i = 0; i < 4; i++)
         {
             for (int j = 0; j < 2; j++)
                 cardDataList.Add(new CardData { type = (CardType)(i + 2), value = 0 });
         }
 
-        // Añadir Gran Tesoro
         cardDataList.Add(new CardData { type = CardType.Treasure, value = 6 });
 
-        // Añadir cartas de Diamante restantes para llegar al total (25 cartas)
         int remainingDiamonds = 18 - cardDataList.Count;
         for (int i = 0; i < remainingDiamonds; i++) 
         {
             cardDataList.Add(new CardData { type = CardType.Diamond, value = Random.Range(1, 4) });
         }
 
-        // Barajar la lista para hacer la distribución aleatoria
         ShuffleList(cardDataList);
-        
+
         return cardDataList;
     }
-    
+
     private void ShuffleList<T>(List<T> list)
     {
         for (int i = list.Count - 1; i > 0; i--)
@@ -107,190 +131,211 @@ public class CardGameManager : MonoBehaviour
         }
     }
 
-    /*private void ShuffleCards()
-    {
-        for (int i = 0; i < cardsInGame.Count; i++)
-        {
-            int randomIndex = Random.Range(0, cardsInGame.Count);
-            Transform tempTransform = cardsInGame[i].transform;
-            cardsInGame[i].transform.position = cardsInGame[randomIndex].transform.position;
-            cardsInGame[randomIndex].transform.position = tempTransform.position;
-        }
-    }*/
-
     public void OnCardClicked(Card card)
     {
-        
-        if (!card.isRevealed && isPlayerTurn) // Revelar solo en el turno del jugador
+        if (!card.isRevealed && isPlayerTurn && !isPlayerOut)
         {
+            Debug.Log("Player clicked on card.");
             card.RevealCard();
             HandlePlayerTurn(card);
+            EndTurn();
         }
     }
 
     private void HandlePlayerTurn(Card card)
     {
-        if (card.data.type == CardType.Diamond || card.data.type == CardType.Treasure)
+        if (card.data.value > 0) // Diamantes o Tesoro
         {
             playerRoundScore += card.data.value;
-            
-        }/*
-        else if (trapsRevealed.Contains(card.data.type))
+        }
+        else if (trapsRevealed.Contains(card.data.type)) // Trampa duplicada
         {
             playerRoundScore = 0;
-            EndTurn();
-            return;
-        }*/
-        else
+            isPlayerOut = true;
+            turnIndicatorText.text = "Player Eliminated!";
+            playerRoundScoreText.text = "Player Eliminated";
+            
+        }
+        else // Primera trampa de este tipo
         {
             trapsRevealed.Add(card.data.type);
         }
 
         UpdateUI();
-        EndTurn();
     }
-    
-    
 
     public void OnPlayerRetire()
     {
-        playerScore += playerRoundScore; // Acumula los puntos ganados en la ronda.
-        playerRoundScore = 0; // Resetea los puntos de la ronda.
-        //trapsRevealed.Clear(); // Limpia las trampas reveladas para la siguiente ronda.
+        if (isPlayerOut) return;
 
-        isPlayerTurn = false; // Cambia el turno a la IA.
-        UpdateUI();
+        playerScore += playerRoundScore;
+        playerRoundScore = 0;
+        isPlayerOut = true;
 
-        StartIATurn(); // Inicia el turno de la IA.
-    }
-
-    private void StartIATurn()
-    {
-        RevealRandomCardForIA();
-    }
-
-    private void HandleIATurn(Card card)
-    {
-        if (card.data.type == CardType.Diamond || card.data.type == CardType.Treasure)
-        {
-            iaRoundScore += card.data.value;
-        }
-        /*
-        else if (trapsRevealed.Contains(card.data.type))
-        {
-            //iaRoundScore = 0; // La IA pierde puntos acumulados.
-            EndTurn();
-            return; // Termina el turno inmediatamente.
-        }
-        */
-        else
-        {
-            trapsRevealed.Add(card.data.type);
-        }
-
-        // Decisión de la IA: continuar o retirarse
-        /*bool shouldRetire = DecideIfIARetires();
-        if (shouldRetire)
-        {
-            EndTurn();
-        }
-        else
-        {
-            RevealRandomCardForIA();
-        }*/
-    
+        playerRoundScoreText.text = "Player Retired";
+        turnIndicatorText.text = "Player Retired!";
         UpdateUI();
         EndTurn();
     }
 
-    private bool DecideIfIARetires()
+    public void StartIATurn()
     {
-        int playerPotentialScore = playerScore + playerRoundScore;
-        int trapsCount = 0;
-
-        foreach (var card in cardsInGame)
+        if (!isPlayerTurn && !isIaOut)
         {
-            if (!card.isRevealed && trapsRevealed.Contains(card.data.type))
-            {
-                trapsCount++;
-            }
+            StartCoroutine(HandleIATurnWithDelay());
         }
+    }
 
-        float riskFactor = trapsCount / (float)(cardsInGame.Count - trapsRevealed.Count);
-        if (playerPotentialScore > iaScore && riskFactor < 0.3f)
-        {
-            return false; // La IA arriesga si va perdiendo y el riesgo es bajo.
-        }
+    private IEnumerator HandleIATurnWithDelay()
+    {
+        Debug.Log("IA Turn started.");
+        yield return new WaitForSeconds(2f);
 
-        return true; // Se retira si el riesgo es alto o no necesita arriesgar.
+        RevealRandomCardForIA();
+
+        yield return new WaitForSeconds(1f);
+        EndTurn();
     }
 
     private void RevealRandomCardForIA()
     {
         List<Card> hiddenCards = cardsInGame.FindAll(card => !card.isRevealed);
+
         if (hiddenCards.Count > 0)
         {
+            Debug.Log("IA is revealing a card.");
             int randomIndex = Random.Range(0, hiddenCards.Count);
-            hiddenCards[randomIndex].RevealCard(); // Revela la carta.
-            EndTurn();
+            Card chosenCard = hiddenCards[randomIndex];
+            chosenCard.RevealCard();
+            HandleIATurn(chosenCard);
         }
         else
         {
-            EndTurn(); // Si no hay cartas ocultas, termina el turno.
+            Debug.LogError("No cards available for IA to reveal.");
         }
     }
 
-    public void EndTurn()
+    public void HandleIATurn(Card card)
     {
-        if (isPlayerTurn)
+        if (card.data.value > 0) // Diamantes o Tesoro
         {
-            //playerRoundScore += playerRoundScore;
-            isPlayerTurn = false;
-            StartIATurn();
+            iaRoundScore += card.data.value;
         }
-        else
+        else if (trapsRevealed.Contains(card.data.type)) // Trampa duplicada
         {
-            isPlayerTurn = true;
+            iaRoundScore = 0;
+            isIaOut = true;
+            iaRoundScoreText.text = "IA Eliminated";
+            turnIndicatorText.text = "IA Eliminated!";
         }
-        
-        if (!isPlayerTurn)
+        else // Primera trampa de este tipo
         {
-            StartCoroutine(IATurnDelay());
+            trapsRevealed.Add(card.data.type);
         }
-        
+
         UpdateUI();
     }
 
-    public void EndRound()
+    private void EndTurn()
     {
+        if (isPlayerOut && isIaOut)
+        {
+            // Si ambos jugadores están fuera, termina la ronda
+            Debug.Log("Both players are out. Ending round.");
+            EndRound();
+            return;
+        }
+
         if (isPlayerTurn)
         {
-            playerScore += playerRoundScore;
-            isPlayerTurn = false;
-            StartIATurn();
+            // Es el turno del jugador
+            if (isIaOut)
+            {
+                // Si la IA está fuera, el jugador continúa jugando
+                Debug.Log("IA is out. Player continues their turn.");
+                isPlayerTurn = true; // No cambia el turno
+            }
+            else
+            {
+                // Si la IA no está fuera, pasa el turno a la IA
+                Debug.Log("Player's turn ends. Passing to IA.");
+                isPlayerTurn = false;
+                StartIATurn();
+            }
         }
         else
         {
-            iaRoundScore += iaRoundScore;
-            isPlayerTurn = true;
+            // Es el turno de la IA
+            if (isPlayerOut)
+            {
+                // Si el jugador está fuera, la IA continúa jugando
+                Debug.Log("Player is out. IA continues their turn.");
+                isPlayerTurn = false; // No cambia el turno
+                StartIATurn();
+            }
+            else
+            {
+                // Si el jugador no está fuera, pasa el turno al jugador
+                Debug.Log("IA's turn ends. Passing to Player.");
+                isPlayerTurn = true;
+            }
         }
-        
-        trapsRevealed.Clear();
+
         UpdateUI();
     }
 
-    private IEnumerator IATurnDelay()
+
+    private void EndRound()
     {
-        yield return new WaitForSeconds(1f);
+        playerScore += playerRoundScore;
+        iaScore += iaRoundScore;
+        roundCounter++;
+
+        if (roundCounter > 3) // Fin del juego tras 3 rondas
+        {
+            DetermineWinner();
+            return;
+        }
+
+        InitializeGame();
+    }
+    private void DetermineWinner()
+    {
+        isGameOver = true;
+        if (playerScore > iaScore)
+        {
+            endGameMessageText.text = "Player Wins!";
+        }
+        else if (iaScore > playerScore)
+        {
+            endGameMessageText.text = "IA Wins!";
+        }
+        else
+        {
+            endGameMessageText.text = "It's a Tie!";
+        }
+
+        Debug.Log("Game Over!");
     }
 
     private void UpdateUI()
     {
-        playerRoundScoreText.text = "Jugador: " + playerRoundScore;
-        iaRoundScoreText.text = "IA: " + iaRoundScore;
-        turnIndicatorText.text = isPlayerTurn ? "Turno del Jugador" : "Turno de la IA";
+        playerScoreText.text = $"Player: {playerScore}";
+        iaScoreText.text = $"AI: {iaScore}";
+        playerRoundScoreText.text = isPlayerOut ? "Player Eliminated" : $"Player Round: {playerRoundScore}";
+        iaRoundScoreText.text = isIaOut ? "IA Eliminated" : $"AI Round: {iaRoundScore}";
+        roundCounterText.text = $"Round: {roundCounter}";
+        turnIndicatorText.text = isPlayerTurn ? "Player's Turn" : "AI's Turn";
     }
 }
+
+
+
+
+
+
+
+
 
 
 
