@@ -35,8 +35,10 @@ public class CardGameManager : MonoBehaviour
     private bool isGameOver = false;
 
     public bool isPlayerTurn = true;
-    private bool isPlayerOut = false;
-    private bool isIaOut = false;
+    private bool isPlayerRetired = false;
+    private bool isIaRetired = false;
+    private bool isIaEliminated = false;
+    private bool isPlayerEliminated = false;
 
     private void Awake()
     {
@@ -53,8 +55,10 @@ public class CardGameManager : MonoBehaviour
         Debug.Log("Initializing game...");
 
         trapsRevealed.Clear();
-        isPlayerOut = false;
-        isIaOut = false;
+        isPlayerRetired = false;
+        isPlayerEliminated = false;
+        isIaRetired = false;
+        isIaEliminated = false;
         isPlayerTurn = true;
         playerRoundScore = 0;
         iaRoundScore = 0;
@@ -67,6 +71,19 @@ public class CardGameManager : MonoBehaviour
         }
 
         List<CardData> cardDataList = GenerateCardData();
+        
+        // Inicializar las cartas con animación
+        StartCoroutine(InitializeCardsWithAnimation(cardDataList));
+
+        retireButton.onClick.AddListener(OnPlayerRetire);
+        UpdateUI();
+    }
+
+    private IEnumerator InitializeCardsWithAnimation(List<CardData> cardDataList)
+    {
+        float animationDuration = 4f;
+        float delayPerCard = animationDuration / cardDataList.Count;
+
         foreach (CardData data in cardDataList)
         {
             GameObject newCard = Instantiate(cardPrefab, cardContainer);
@@ -91,10 +108,9 @@ public class CardGameManager : MonoBehaviour
             }
 
             cardsInGame.Add(card);
-        }
 
-        retireButton.onClick.AddListener(OnPlayerRetire);
-        UpdateUI();
+            yield return new WaitForSeconds(delayPerCard);
+        }
     }
 
     private List<CardData> GenerateCardData()
@@ -133,7 +149,7 @@ public class CardGameManager : MonoBehaviour
 
     public void OnCardClicked(Card card)
     {
-        if (!card.isRevealed && isPlayerTurn && !isPlayerOut)
+        if (!card.isRevealed && isPlayerTurn && (!isPlayerRetired || !isPlayerEliminated))
         {
             Debug.Log("Player clicked on card.");
             card.RevealCard();
@@ -151,10 +167,7 @@ public class CardGameManager : MonoBehaviour
         else if (trapsRevealed.Contains(card.data.type)) // Trampa duplicada
         {
             playerRoundScore = 0;
-            isPlayerOut = true;
-            turnIndicatorText.text = "Player Eliminated!";
-            playerRoundScoreText.text = "Player Eliminated";
-            
+            isPlayerEliminated = true;
         }
         else // Primera trampa de este tipo
         {
@@ -166,21 +179,19 @@ public class CardGameManager : MonoBehaviour
 
     public void OnPlayerRetire()
     {
-        if (isPlayerOut) return;
+        if (isPlayerRetired || isPlayerEliminated) return;
 
         playerScore += playerRoundScore;
         playerRoundScore = 0;
-        isPlayerOut = true;
-
-        playerRoundScoreText.text = "Player Retired";
-        turnIndicatorText.text = "Player Retired!";
+        isPlayerRetired = true;
+        
         UpdateUI();
         EndTurn();
     }
 
     public void StartIATurn()
     {
-        if (!isPlayerTurn && !isIaOut)
+        if (!isPlayerTurn && (!isIaRetired || !isIaEliminated))
         {
             StartCoroutine(HandleIATurnWithDelay());
         }
@@ -189,9 +200,16 @@ public class CardGameManager : MonoBehaviour
     private IEnumerator HandleIATurnWithDelay()
     {
         Debug.Log("IA Turn started.");
-        yield return new WaitForSeconds(2f);
-
-        RevealRandomCardForIA();
+        yield return new WaitForSeconds(1f);
+        
+        if (DecideIfIARetires())
+        {
+            OnIARetire();
+        }
+        else
+        {
+            RevealRandomCardForIA();
+        }
 
         yield return new WaitForSeconds(1f);
         EndTurn();
@@ -224,9 +242,7 @@ public class CardGameManager : MonoBehaviour
         else if (trapsRevealed.Contains(card.data.type)) // Trampa duplicada
         {
             iaRoundScore = 0;
-            isIaOut = true;
-            iaRoundScoreText.text = "IA Eliminated";
-            turnIndicatorText.text = "IA Eliminated!";
+            isIaEliminated = true;
         }
         else // Primera trampa de este tipo
         {
@@ -235,21 +251,63 @@ public class CardGameManager : MonoBehaviour
 
         UpdateUI();
     }
+    
+    private bool DecideIfIARetires()
+    {
+        int totalCards = cardsInGame.Count;
+        int revealedCards = cardsInGame.FindAll(card => card.isRevealed).Count;
+        int remainingCards = totalCards - revealedCards;
+        int revealedTraps = cardsInGame.FindAll(card => card.isRevealed && card.data.value == 0).Count;
 
+        if (roundCounter == 3)
+        {
+            if (playerRoundScore + playerScore > iaScore + iaRoundScore) return false;
+            if ((isPlayerRetired || isPlayerEliminated) && iaScore + iaRoundScore > playerRoundScore + playerScore) return true;
+        }
+        
+        if (iaRoundScore >= 10) return true; 
+        if (revealedTraps <=2) return false; 
+        if (iaRoundScore <= 4) return false; 
+        
+        
+        // Cálculo del factor de riesgo
+        float riskFactor = (float)revealedTraps / remainingCards;
+
+        // Decisión basada en el riesgo
+        if (riskFactor > 0.4f) // Umbral ajustable
+        {
+            Debug.Log($"IA decides to retire. RiskFactor: {riskFactor}, Remaining Traps: {revealedTraps}, Remaining Cards: {remainingCards}");
+            return true;
+        }
+
+        Debug.Log($"IA decides to continue. RiskFactor: {riskFactor}, Remaining Traps: {revealedTraps}, Remaining Cards: {remainingCards}");
+        return false;
+    }
+
+    
+    public void OnIARetire()
+    {
+        iaScore += iaRoundScore;
+        iaRoundScore = 0;
+        isIaRetired = true;
+        
+        UpdateUI();
+    }
+    
     private void EndTurn()
     {
-        if (isPlayerOut && isIaOut)
+        if ((isPlayerRetired || isPlayerEliminated) && (isIaRetired || isIaEliminated))
         {
             // Si ambos jugadores están fuera, termina la ronda
             Debug.Log("Both players are out. Ending round.");
-            EndRound();
+            StartCoroutine(EndRoundWithPause());
             return;
         }
 
         if (isPlayerTurn)
         {
             // Es el turno del jugador
-            if (isIaOut)
+            if (isIaRetired || isIaEliminated)
             {
                 // Si la IA está fuera, el jugador continúa jugando
                 Debug.Log("IA is out. Player continues their turn.");
@@ -266,7 +324,7 @@ public class CardGameManager : MonoBehaviour
         else
         {
             // Es el turno de la IA
-            if (isPlayerOut)
+            if (isPlayerRetired || isPlayerEliminated)
             {
                 // Si el jugador está fuera, la IA continúa jugando
                 Debug.Log("Player is out. IA continues their turn.");
@@ -284,20 +342,25 @@ public class CardGameManager : MonoBehaviour
         UpdateUI();
     }
 
-
-    private void EndRound()
+    private IEnumerator EndRoundWithPause()
     {
-        playerScore += playerRoundScore;
+        yield return new WaitForSeconds(2f); // Pausa antes de inicializar la siguiente ronda
+
+        playerScore += playerRoundScore; // Agregar puntuaciones de la ronda al total
         iaScore += iaRoundScore;
         roundCounter++;
 
-        if (roundCounter > 3) // Fin del juego tras 3 rondas
+        if (roundCounter > 3) // Si se alcanzan 3 rondas, termina el juego
         {
+            foreach (var card in cardsInGame)
+            {
+                Destroy(card.gameObject); // Eliminar cartas del tablero
+            }
             DetermineWinner();
-            return;
+            yield break;
         }
 
-        InitializeGame();
+        InitializeGame(); // Iniciar la nueva ronda
     }
     private void DetermineWinner()
     {
@@ -322,8 +385,35 @@ public class CardGameManager : MonoBehaviour
     {
         playerScoreText.text = $"Player: {playerScore}";
         iaScoreText.text = $"AI: {iaScore}";
-        playerRoundScoreText.text = isPlayerOut ? "Player Eliminated" : $"Player Round: {playerRoundScore}";
-        iaRoundScoreText.text = isIaOut ? "IA Eliminated" : $"AI Round: {iaRoundScore}";
+        
+        // Actualizar estado del player
+        if (isPlayerEliminated)
+        {
+            playerRoundScoreText.text = "Player Eliminated";
+        }
+        else if (isPlayerRetired)
+        {
+            playerRoundScoreText.text = "Player Retired";
+        }
+        else
+        {
+            playerRoundScoreText.text = $"Player: {playerRoundScore}";
+        }
+
+        // Actualizar estado de la IA
+        if (isIaEliminated)
+        {
+            iaRoundScoreText.text = "IA Eliminated";
+        }
+        else if (isIaRetired)
+        {
+            iaRoundScoreText.text = "IA Retired";
+        }
+        else
+        {
+            iaRoundScoreText.text = $"AI: {iaRoundScore}";
+        }
+            
         roundCounterText.text = $"Round: {roundCounter}";
         turnIndicatorText.text = isPlayerTurn ? "Player's Turn" : "AI's Turn";
     }
