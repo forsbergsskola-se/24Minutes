@@ -10,14 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b72fb64762c824c48a5274f72c0de7e3, type: 3}
-  m_Name: Yeap!
+  m_Name: 8.RainFun
   m_EditorClassIdentifier: 
-  storyText: Yeap!
-  option1Text: A
-  option2Text: B
-  option3Text: C
-  option4Text: D
-  option1Block: {fileID: 0}
-  option2Block: {fileID: 0}
+  storyText: '''Yeah, that makes it more fun,'' Sam says with a smile. ''Let''s play!''
+    he exclaims, throwing three marbles onto the floor.'
+  option1Text: Let's have fun then!
+  option2Text: Get out of here
+  option3Text: 
+  option4Text: 
+  option1Block: {fileID: 11400000, guid: 4cb807073b3a2b6489dd9e04ffde80aa, type: 2}
+  option2Block: {fileID: 11400000, guid: 8e3014b717b1a5e45b762b24c2402bfe, type: 2}
   option3Block: {fileID: 0}
   option4Block: {fileID: 0}

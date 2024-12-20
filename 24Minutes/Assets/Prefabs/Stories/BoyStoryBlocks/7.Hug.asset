@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b72fb64762c824c48a5274f72c0de7e3, type: 3}
+  m_Name: 7.Hug
+  m_EditorClassIdentifier: 
+  storyText: '''Do you need a hug?'' Sam asks. His gaze seems to pierce you, searching
+    for something deep inside you. It hurts, It heals.'
+  option1Text: Yes.
+  option2Text: No.
+  option3Text: 
+  option4Text: 
+  option1Block: {fileID: 11400000, guid: 915baf4a0d84cad4ead1b66eeeb1183e, type: 2}
+  option2Block: {fileID: 11400000, guid: f2aa573acd768bf4fa8fca7494d38a8f, type: 2}
+  option3Block: {fileID: 0}
+  option4Block: {fileID: 0}

@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b72fb64762c824c48a5274f72c0de7e3, type: 3}
+  m_Name: 5.NotAlone
+  m_EditorClassIdentifier: 
+  storyText: '''I''m not alone,'' Sam says doubtfully. ''They are here with me.''
+    You feel the cold gaze of someone watching you from a distance.'
+  option1Text: I don't see anybody but...
+  option2Text: I'm scared
+  option3Text: 
+  option4Text: 
+  option1Block: {fileID: 11400000, guid: 815bac1a2cc9059429cb2cafacc3812b, type: 2}
+  option2Block: {fileID: 11400000, guid: ca5e29f560536e346875cf9cb6409d48, type: 2}
+  option3Block: {fileID: 0}
+  option4Block: {fileID: 0}

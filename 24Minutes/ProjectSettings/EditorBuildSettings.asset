@@ -17,6 +17,18 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/ChurchGame.unity
     guid: 4fad640dc1272034f96445108777f5a1
+  - enabled: 1
+    path: Assets/Scenes/TeenagerConversation.unity
+    guid: 38202970404d5884aa3364004f6ffa1a
+  - enabled: 1
+    path: Assets/Scenes/CardsGame.unity
+    guid: 4913b00e42f696a4699deb1ab5168aa0
+  - enabled: 1
+    path: Assets/Scenes/Menu.unity
+    guid: 536131f020c6b9d4ba04c4acf13211b3
+  - enabled: 1
+    path: Assets/Scenes/BoyConversation.unity
+    guid: 3c98396c22891cd42a3fe0894841fc9e
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: e38fbf14a4ba3124cb6600ebb45c2b45, type: 2}
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: e4938eaca6a8ff74a997319985006cd9, type: 2}

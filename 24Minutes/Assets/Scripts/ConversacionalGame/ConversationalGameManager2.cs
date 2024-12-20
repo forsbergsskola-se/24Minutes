@@ -1,6 +1,11 @@
-using UnityEngine;
-using UnityEngine.UI;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using TMPro;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using Input = UnityEngine.Windows.Input;
 
 public class ConversationGameManager2 : MonoBehaviour
 {
@@ -20,6 +25,8 @@ public class ConversationGameManager2 : MonoBehaviour
 
     private void DisplayBlock(StoryBlockData block)
     {
+        
+        
         // Actualiza el texto principal de la historia
         storyText.text = block.storyText;
 
@@ -33,6 +40,15 @@ public class ConversationGameManager2 : MonoBehaviour
     {
         // Configura las opciones y enlaza los botones
         string[] optionTexts = { block.option1Text, block.option2Text, block.option3Text, block.option4Text };
+        bool[] optionTransitionals =
+        {
+            block.option1IsTransition, block.option2IsTransition, block.option3IsTransition, block.option4IsTransition
+        };
+        string[] optionScenes =
+        {
+            block.option1TransitionScene, block.option2TransitionScene, block.option3TransitionScene,
+            block.option4TransitionScene
+        };
         StoryBlockData[] optionBlocks = { block.option1Block, block.option2Block, block.option3Block, block.option4Block };
 
         for (int i = 0; i < optionButtons.Length; i++)
@@ -46,7 +62,15 @@ public class ConversationGameManager2 : MonoBehaviour
                 // Elimina listeners anteriores y agrega uno nuevo
                 int index = i; // Copia el índice para evitar problemas de closures
                 optionButtons[i].onClick.RemoveAllListeners();
-                optionButtons[i].onClick.AddListener(() => DisplayBlock(optionBlocks[index]));
+                if (optionTransitionals[i])
+                {
+                    optionButtons[i].onClick.AddListener( () => SceneManager.LoadScene(optionScenes[index]));
+                }
+                else
+                {
+                    optionButtons[i].onClick.AddListener(() => DisplayBlock(optionBlocks[index]));
+                }
+                
             }
             else
             {

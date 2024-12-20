@@ -10,14 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b72fb64762c824c48a5274f72c0de7e3, type: 3}
-  m_Name: I'm Peter
+  m_Name: 19.Fight
   m_EditorClassIdentifier: 
-  storyText: I'm Peter
-  option1Text: A
-  option2Text: B
-  option3Text: C
-  option4Text: D
-  option1Block: {fileID: 0}
+  storyText: You try to escape but the more you fight the more you break. Your heart
+    races, your vision blurs, you feel like throwing up. It's over. But the night
+    still awaits you.
+  option1Text: Menu
+  option2Text: 
+  option3Text: 
+  option4Text: 
+  option1Block: {fileID: 11400000, guid: 8e3014b717b1a5e45b762b24c2402bfe, type: 2}
   option2Block: {fileID: 0}
   option3Block: {fileID: 0}
   option4Block: {fileID: 0}

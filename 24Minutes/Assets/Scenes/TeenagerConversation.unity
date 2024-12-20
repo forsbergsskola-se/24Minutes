@@ -243,13 +243,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 022cc9d7c851a864cacbeb208f699193, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  storyText: {fileID: 0}
+  storyText: {fileID: 2137549547}
   optionButtons:
   - {fileID: 485799321}
   - {fileID: 1010152419}
   - {fileID: 375368901}
   - {fileID: 2097572674}
-  initialBlock: {fileID: 11400000, guid: f25189cdffae15a4a8b61e762abdcabd, type: 2}
+  initialBlock: {fileID: 11400000, guid: 6c87034722e50c349824632738d5bc0b, type: 2}
 --- !u!1 &98719255
 GameObject:
   m_ObjectHideFlags: 0
@@ -316,8 +316,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190228
-  m_fontColor: {r: 0.57861626, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -467,9 +467,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 12471658}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: Button3Clicked
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -530,7 +530,7 @@ GameObject:
   - component: {fileID: 404399358}
   - component: {fileID: 404399357}
   m_Layer: 5
-  m_Name: Input (TMP)
+  m_Name: InPut
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -758,8 +758,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190228
-  m_fontColor: {r: 0.57861626, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -971,7 +971,7 @@ GameObject:
   - component: {fileID: 519994418}
   - component: {fileID: 519994417}
   m_Layer: 5
-  m_Name: Character
+  m_Name: Imagen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1016,7 +1016,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 3b738f70d40cd3b408a9bb80d053df68, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f6430f459b1340a4a8eded47681ae493, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1285,8 +1285,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190228
-  m_fontColor: {r: 0.57861626, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1708,8 +1708,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190228
-  m_fontColor: {r: 0.57861626, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -2081,7 +2081,7 @@ GameObject:
   - component: {fileID: 2137549548}
   - component: {fileID: 2137549547}
   m_Layer: 5
-  m_Name: Conversation
+  m_Name: StoryText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

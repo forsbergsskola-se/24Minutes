@@ -10,14 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b72fb64762c824c48a5274f72c0de7e3, type: 3}
-  m_Name: Hello!
+  m_Name: 3.Menu
   m_EditorClassIdentifier: 
-  storyText: Hello!
-  option1Text: A
-  option2Text: B
-  option3Text: C
-  option4Text: D
+  storyText: 
+  option1Text: 
+  option2Text: 
+  option3Text: 
+  option4Text: 
   option1Block: {fileID: 0}
+  option1IsTransition: 0
+  option1TransitionScene: 
   option2Block: {fileID: 0}
+  option2IsTransition: 0
+  option2TransitionScene: 
   option3Block: {fileID: 0}
+  option3IsTransition: 0
+  option3TransitionScene: 
   option4Block: {fileID: 0}
+  option4IsTransition: 0
+  option4TransitionScene: 

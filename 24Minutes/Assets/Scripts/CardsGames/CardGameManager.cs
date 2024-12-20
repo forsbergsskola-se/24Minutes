@@ -48,6 +48,7 @@ public class CardGameManager : MonoBehaviour
     private void Start()
     {
         InitializeGame();
+        endGameMessageText.enabled = false;
     }
 
     private void InitializeGame()
@@ -125,7 +126,7 @@ public class CardGameManager : MonoBehaviour
 
         cardDataList.Add(new CardData { type = CardType.Treasure, value = 6 });
 
-        int remainingDiamonds = 18 - cardDataList.Count;
+        int remainingDiamonds = 27 - cardDataList.Count;
         for (int i = 0; i < remainingDiamonds; i++) 
         {
             cardDataList.Add(new CardData { type = CardType.Diamond, value = Random.Range(1, 4) });
@@ -365,6 +366,7 @@ public class CardGameManager : MonoBehaviour
     private void DetermineWinner()
     {
         isGameOver = true;
+        endGameMessageText.enabled = true;
         if (playerScore > iaScore)
         {
             endGameMessageText.text = "Player Wins!";

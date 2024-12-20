@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b72fb64762c824c48a5274f72c0de7e3, type: 3}
+  m_Name: 1.Intro
+  m_EditorClassIdentifier: 
+  storyText: It's raining, but you don't feel the cold. Except for your feet, which
+    are completely frozen. You walk towards a silhouette on the ground. It's a child
+    playing marbles under the rain. His figure seems blurred, as if it belongs to
+    a memory from the past.
+  option1Text: Hello, what is your name?
+  option2Text: Ey! What are you doing here?
+  option3Text: I'm lost. Could you help me?
+  option4Text: You observe the child in silence.
+  option1Block: {fileID: 11400000, guid: a06c99f98121bd547894290afa486d26, type: 2}
+  option2Block: {fileID: 11400000, guid: 5d6b5835dc7261c41954d801e0297444, type: 2}
+  option3Block: {fileID: 11400000, guid: 446beeb19cbf23344b435e638c28ab3a, type: 2}
+  option4Block: {fileID: 11400000, guid: 6e76b41498e461f4d901f7292133af27, type: 2}

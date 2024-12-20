@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b72fb64762c824c48a5274f72c0de7e3, type: 3}
+  m_Name: 9.Help
+  m_EditorClassIdentifier: 
+  storyText: '"The boy stares at you, his expression is completely neutral, but there''s
+    something deeply disturbing in his eyes. He doesn''t say anything, but you feel
+    like he''s waiting for something from you."'
+  option1Text: Help me, God damn!
+  option2Text: Shake the child by the shoulders
+  option3Text: 
+  option4Text: 
+  option1Block: {fileID: 11400000, guid: d5a80b0f0518c584bac2620822cf809c, type: 2}
+  option2Block: {fileID: 11400000, guid: 7ae8e6696af74ea4f9972858938d90b7, type: 2}
+  option3Block: {fileID: 0}
+  option4Block: {fileID: 0}

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b72fb64762c824c48a5274f72c0de7e3, type: 3}
+  m_Name: 4.Place
+  m_EditorClassIdentifier: 
+  storyText: "'You should know\u2026' Sam replies, still looking at the marbles.
+    There's something unsettling in his tone, like he knows more about you than you
+    do yourself. 'But you always forget,' he adds with a sigh."
+  option1Text: '"Are you alone here?"'
+  option2Text: '"This is just a dream, right?"'
+  option3Text: The silence of the place becomes unbearable and you decide to leave.
+  option4Text: 
+  option1Block: {fileID: 11400000, guid: 91d681236a148ae4aa3ccef494ffda19, type: 2}
+  option2Block: {fileID: 11400000, guid: 8ef65bac24d326b4fa68b50f66ebcee3, type: 2}
+  option3Block: {fileID: 11400000, guid: 8e3014b717b1a5e45b762b24c2402bfe, type: 2}
+  option4Block: {fileID: 0}

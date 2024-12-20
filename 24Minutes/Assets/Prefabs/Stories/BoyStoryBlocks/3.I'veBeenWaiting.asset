@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b72fb64762c824c48a5274f72c0de7e3, type: 3}
+  m_Name: 3.I'veBeenWaiting
+  m_EditorClassIdentifier: 
+  storyText: '''I''ve been waiting for you,'' Sam says as he drops a blue marble
+    that seems to sparkle in the rain. His voice sounds distant, like an echo of
+    something you''ve heard before.'
+  option1Text: Sure... What is this place?
+  option2Text: Eh... Are you alone here?
+  option3Text: I don't know you, Do I? I'm confused.
+  option4Text: '"You look at nothing, at the rain trying to find answers."'
+  option1Block: {fileID: 11400000, guid: f25189cdffae15a4a8b61e762abdcabd, type: 2}
+  option2Block: {fileID: 11400000, guid: 91d681236a148ae4aa3ccef494ffda19, type: 2}
+  option3Block: {fileID: 11400000, guid: a06c99f98121bd547894290afa486d26, type: 2}
+  option4Block: {fileID: 11400000, guid: 6e76b41498e461f4d901f7292133af27, type: 2}

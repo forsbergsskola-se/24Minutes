@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b72fb64762c824c48a5274f72c0de7e3, type: 3}
+  m_Name: 3.I'veBeenWaiting 2
+  m_EditorClassIdentifier: 
+  storyText: The boy remains silent.
+  option1Text: Mmm... What is this place?
+  option2Text: I don't know you, Do I? I'm confused.
+  option3Text: '"You look at nothing, at the rain trying to find answers."'
+  option4Text: 
+  option1Block: {fileID: 11400000, guid: f25189cdffae15a4a8b61e762abdcabd, type: 2}
+  option1IsTransition: 0
+  option1TransitionScene: 
+  option2Block: {fileID: 11400000, guid: a06c99f98121bd547894290afa486d26, type: 2}
+  option2IsTransition: 0
+  option2TransitionScene: 
+  option3Block: {fileID: 11400000, guid: 6e76b41498e461f4d901f7292133af27, type: 2}
+  option3IsTransition: 0
+  option3TransitionScene: 
+  option4Block: {fileID: 0}
+  option4IsTransition: 0
+  option4TransitionScene: 
