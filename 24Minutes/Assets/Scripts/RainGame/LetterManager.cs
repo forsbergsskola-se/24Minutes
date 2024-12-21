@@ -6,14 +6,18 @@ public class LetterManager : MonoBehaviour
 {
     public List<GameObject> letterPrefabs; // Prefabs de las letras (A-Z)
     public Transform spawnArea; // Área donde aparecen las letras
+    public List<GameObject> objectsToDisable;
+    public float disableAfterSeconds = 5f;
     public float destroyAfterSeconds = 10f;
     public float touchRadius = 0.5f; // Área de detección alrededor del toque
-
+    
+    
     private Camera mainCamera;
 
     private void Start()
     {
         mainCamera = Camera.main;
+        StartCoroutine(DisableObjectsAfterDelay());
     }
 
     private void Update()
@@ -53,6 +57,19 @@ public class LetterManager : MonoBehaviour
     {
         GameObject newLetter = Instantiate(letterPrefabs[0], spawnPosition, Quaternion.identity);
         Rigidbody2D rb = newLetter.GetComponent<Rigidbody2D>();
+    }
+    
+    private IEnumerator DisableObjectsAfterDelay()
+    {
+        yield return new WaitForSeconds(disableAfterSeconds);
+
+        foreach (GameObject obj in objectsToDisable)
+        {
+            if (obj != null)
+            {
+                obj.SetActive(false); // Desactiva el objeto
+            }
+        }
     }
 
     private void OnDrawGizmos()
