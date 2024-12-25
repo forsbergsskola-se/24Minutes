@@ -9,10 +9,14 @@ public class LetterManager : MonoBehaviour
     public List<GameObject> objectsToDisable;
     public float disableAfterSeconds = 5f;
     public float destroyAfterSeconds = 10f;
-    public float touchRadius = 0.5f; // Área de detección alrededor del toque
-    
+    public float touchRadius = 0.25f; // Área de detección alrededor del toque
+    public string secretWord;
+    private int currentSecretIndex = 0;
+    public float moveSpeed = 5f; // Velocidad de movimiento de la letra especial
+    public Transform[] targetPositions; // Posiciones para cada letra de la palabra secreta
     
     private Camera mainCamera;
+    private bool canInteract = true; // Controla si se puede interactuar
 
     private void Start()
     {
@@ -25,6 +29,14 @@ public class LetterManager : MonoBehaviour
         if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
         {
             HandleTouch(Input.GetTouch(0).position);
+        }
+    }
+    
+    public void CheckSpecialLetter(Letter letterScript)
+    {
+        if (letterScript.letter == secretWord[currentSecretIndex].ToString())
+        {
+            StartCoroutine(HandleSpecialLetter(letterScript));
         }
     }
 
@@ -44,6 +56,11 @@ public class LetterManager : MonoBehaviour
             if (letterScript != null)
             {
                 letterScript.TransformLetter();
+
+                if (letterScript.letter == secretWord[currentSecretIndex].ToString())
+                {
+                    StartCoroutine(HandleSpecialLetter(letterScript));
+                }
             }
         }
         else
@@ -56,7 +73,52 @@ public class LetterManager : MonoBehaviour
     private void SpawnLetter(Vector2 spawnPosition)
     {
         GameObject newLetter = Instantiate(letterPrefabs[0], spawnPosition, Quaternion.identity);
-        Rigidbody2D rb = newLetter.GetComponent<Rigidbody2D>();
+        //Rigidbody2D rb = newLetter.GetComponent<Rigidbody2D>();
+        Letter letterScript = newLetter.GetComponent<Letter>();
+        
+        if (letterScript != null && letterScript.letter == secretWord[currentSecretIndex].ToString())
+        {
+            StartCoroutine(HandleSpecialLetter(letterScript));
+        }
+    }
+    
+    private IEnumerator HandleSpecialLetter(Letter letterScript)
+    {
+        canInteract = false;
+        
+        // Deshabilitar transformaciones y colisiones de la letra especial
+        Rigidbody2D rb = letterScript.GetComponent<Rigidbody2D>();
+        if (rb != null) rb.simulated = false;
+
+        Collider2D col = letterScript.GetComponent<Collider2D>();
+        if (col != null) col.enabled = false;
+
+        // Mover la letra especial a su posición objetivo
+        Transform targetPosition = targetPositions[currentSecretIndex];
+        yield return StartCoroutine(MoveToPosition(letterScript.transform, targetPosition.position));
+
+        // Avanzar al siguiente índice de la palabra secreta
+        currentSecretIndex++;
+
+        // Verificar si se completó la palabra secreta
+        if (currentSecretIndex >= secretWord.Length)
+        {
+            Debug.Log("¡Palabra secreta completada!");
+        }
+
+        canInteract = true;
+    }
+
+    private IEnumerator MoveToPosition(Transform letterTransform, Vector3 targetPosition)
+    {
+        while (Vector3.Distance(letterTransform.position, targetPosition) > 0.01f)
+        {
+            letterTransform.position = Vector3.MoveTowards(letterTransform.position, targetPosition, moveSpeed * Time.deltaTime);
+            yield return null;
+        }
+
+        // Asegurar posición final exacta
+        letterTransform.position = targetPosition;
     }
     
     private IEnumerator DisableObjectsAfterDelay()

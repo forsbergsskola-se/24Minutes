@@ -6,11 +6,13 @@ public class Letter : MonoBehaviour
 {
     public List<GameObject> letterPrefabs; // Referencia a los prefabs de A-Z
     public float destroyAfterSeconds = 10f;
-
+    public string letter;
     private bool isTransformable = true; // Para evitar transformaciones después de colisiones
-
+    private LetterManager letterManager;
+    
     private void Start()
     {
+        letterManager = FindObjectOfType<LetterManager>();
         // Asegurarse de que el objeto se destruya tras el tiempo límite
         //StartCoroutine(DestroyAfterDelay());
     }
@@ -26,16 +28,27 @@ public class Letter : MonoBehaviour
 
     public void TransformLetter()
     {
-        if (!isTransformable) return; // Salir si no se puede transformar
+        if (!isTransformable) return; // Salir si no es transformable
+
+        // Buscar el índice actual en la lista de prefabs
+        int currentIndex = letterPrefabs.FindIndex(prefab => prefab.GetComponent<Letter>().letter == letter);
+        if (currentIndex == -1 || currentIndex >= letterPrefabs.Count - 1) return; // No se encuentra o ya es la última letra
 
         // Cambiar al siguiente prefab
-        int currentIndex = letterPrefabs.IndexOf(gameObject);
-        if (currentIndex < letterPrefabs.Count - 1)
+        GameObject nextLetterPrefab = letterPrefabs[currentIndex + 1];
+        GameObject nextLetter = Instantiate(nextLetterPrefab, transform.position, Quaternion.identity);
+
+        // Configurar la letra transformada
+        Letter nextLetterScript = nextLetter.GetComponent<Letter>();
+        if (nextLetterScript != null)
         {
-            GameObject nextLetter = letterPrefabs[currentIndex + 1];
-            Destroy(gameObject); // Eliminar la letra actual
-            Instantiate(nextLetter, transform.position, Quaternion.identity);
+            nextLetterScript.letter = nextLetterPrefab.GetComponent<Letter>().letter;
+            
+            letterManager.CheckSpecialLetter(nextLetterScript);
         }
+
+        // Eliminar el objeto actual
+        Destroy(gameObject);
     }
 
     /*private IEnumerator DestroyAfterDelay()
@@ -43,6 +56,11 @@ public class Letter : MonoBehaviour
         yield return new WaitForSeconds(destroyAfterSeconds);
         Destroy(gameObject);
     }*/
+    
+    public void SetTransformable(bool value)
+    {
+        isTransformable = value;
+    }
 }
 
 

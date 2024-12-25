@@ -298,3 +298,5 @@ MonoBehaviour:
   - {fileID: 4610179699707826966, guid: 8bf3e96f564ce4546affc74e32edf706, type: 3}
   - {fileID: 4610179699707826966, guid: 162ff9ac59f91c3418799c38f08b9564, type: 3}
   destroyAfterSeconds: 10
+  letter: X
+  specialLetter: 
