@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.Serialization;
 
 public class Letter : MonoBehaviour
 {

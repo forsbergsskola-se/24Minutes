@@ -9,6 +9,7 @@ TagManager:
   - Letter
   - Ground
   - Circle
+  - Riddle
   layers:
   - Default
   - TransparentFX
