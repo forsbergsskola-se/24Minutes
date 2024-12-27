@@ -17,6 +17,8 @@ public class LetterManager2 : MonoBehaviour
     //public float moveSpeed = 5f; // Velocidad de movimiento de la letra especial
     public Transform[] targetPositions; // Posiciones para cada letra de la palabra secreta
     private HashSet<Transform> occupiedSpaces = new HashSet<Transform>();
+    private bool isDraggingLetter = false;
+    private Letter2 letterBeingDragged = null;
     
     private Camera mainCamera;
     //private bool canInteract = true; // Controla si se puede interactuar
@@ -48,28 +50,37 @@ public class LetterManager2 : MonoBehaviour
     {
         Vector3 worldPosition = mainCamera.ScreenToWorldPoint(touchPosition);
         worldPosition.z = 0f;
-        
-        if (IsPointerOverUIObject()) return;
 
+        if (IsPointerOverUIObject()) return;  // Si el toque está sobre la UI, no hacer nada
+
+        // Verificar si ya hay una letra en la posición tocada
         Collider2D hitCollider = Physics2D.OverlapCircle(worldPosition, touchRadius, LayerMask.GetMask("Letter"));
 
         if (hitCollider != null)
         {
+            // Si hay una letra en la zona de toque, interactuar con ella
             Letter2 letterScript = hitCollider.GetComponent<Letter2>();
             if (letterScript != null)
             {
                 if (letterScript.isTransformable)
-                    
                 {
-                    letterScript.TransformLetter();
+                    letterScript.TransformLetter();  // Si la letra es transformable, transformarla
                 }
             }
         }
         else
         {
+            // Si no hay ninguna letra en la posición tocada, generar una nueva
             SpawnLetter(worldPosition);
         }
     }
+    
+    private void StartDraggingLetter(Letter2 letter, Vector3 touchPosition)
+    {
+        // Iniciar el arrastre de la letra
+        letter.StartDragging(touchPosition);
+    }
+
     
     private bool IsPointerOverUIObject()
     {
@@ -79,17 +90,19 @@ public class LetterManager2 : MonoBehaviour
         List<RaycastResult> results = new List<RaycastResult>();
         EventSystem.current.RaycastAll(eventData, results);
 
-        // Filtrar solo elementos del canvas UI
+        // Verificar si el puntero está sobre un objeto UI
         foreach (RaycastResult result in results)
         {
             if (result.gameObject.GetComponentInParent<Canvas>() != null)
             {
-                return true; // El puntero está sobre un elemento UI real
+                // Si el puntero está sobre un objeto UI, devolver true
+                return true;
             }
         }
 
-        return false; // No está sobre un elemento UI real
+        return false; // El puntero no está sobre un objeto UI
     }
+
 
 
     private void SpawnLetter(Vector2 spawnPosition)

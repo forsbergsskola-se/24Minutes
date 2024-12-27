@@ -63,7 +63,16 @@ public class Letter2 : MonoBehaviour
             letterManager2.TryPlaceLetter(this);
         }
     }
+public void StartDragging(Vector3 touchPosition)
+{
+    offset = transform.position - touchPosition;
+    offset.z = 0f;  // Mantener en 2D
+    isBeingDragged = true;
 
+    // Deshabilitar la simulación de la gravedad mientras se arrastra
+    Rigidbody2D rb = GetComponent<Rigidbody2D>();
+    if (rb != null) rb.simulated = false;
+}
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
