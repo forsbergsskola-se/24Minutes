@@ -34,3 +34,7 @@ Add a time factor to the hole experience.
 
 A vision for the future
 Morpheus’ Trials could evolve into an episodic mobile game series, accessible and affordable, where each chapter explores new dreams, mechanics, and narratives. Like an escape room, it would blend storytelling and puzzles into a unique, introspective, and memorable experience.
+
+Miro: https://miro.com/welcomeonboard/VHpKdkV3TFBwN3JvdHlSSXl3b3lQVXJuTDZGRUtINlZHRzNNTmhTTHpxVzhmVHdidVVGd1UxRHVtZDZXY0pxbmtQQ2xTOWQzUUFXMXQ3ZldmYTNlVkVKdFNKZnh1RDFMRHY5amFtb1Q4NitkSUxDOHNWKzFndHVZaUtjaVZDRmkhZQ==?share_link_id=144774986930
+
+Personal Notes: https://docs.google.com/document/d/1H3yXfR1zTRs0XEayt01egrF9mU7cNw4Iw2U-RpTiblQ/edit?usp=sharing
